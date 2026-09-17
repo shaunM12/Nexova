@@ -1,0 +1,31 @@
+{
+  "name": "nexova",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nexova public site — Next.js landing and talent registration",
+  "scripts": {
+    "dev": "bash scripts/dev.sh",
+    "dev:server": "next dev -p 3456 -H 127.0.0.1",
+    "build": "next build",
+    "start": "next start -p 3456 -H 127.0.0.1",
+    "lint": "next lint",
+    "open": "bash scripts/open-firefox.sh",
+    "ports": "bash scripts/ports.sh"
+  },
+  "dependencies": {
+    "next": "^15.5.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.35.0",
+    "eslint-config-next": "^15.5.3",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.9.2"
+  }
+}
