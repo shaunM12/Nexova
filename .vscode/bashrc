@@ -1,0 +1,20 @@
+# Nexova integrated-terminal bashrc (Cursor/VS Code)
+# Used via terminal.integrated.profiles.osx → bash --rcfile
+
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+# Keep the user's normal bash config when present
+if [ -f "$HOME/.bashrc" ]; then
+  # shellcheck disable=SC1090
+  source "$HOME/.bashrc"
+elif [ -f "$HOME/.bash_profile" ]; then
+  # shellcheck disable=SC1090
+  source "$HOME/.bash_profile"
+fi
+
+__nexova_git_branch() {
+  git rev-parse --abbrev-ref HEAD 2>/dev/null | sed 's/.*/ (&)/'
+}
+
+# user:dir (branch) $
+PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[33m\]$(__nexova_git_branch)\[\033[00m\]\$ '

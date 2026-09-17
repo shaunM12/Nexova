@@ -1,0 +1,28 @@
+{
+  "services": [
+    {
+      "id": "web",
+      "label": "Nexova web (public + backoffice UI)",
+      "port": 3456,
+      "url": "http://127.0.0.1:3456",
+      "status": "active",
+      "notes": "Next.js App Router. Public at /, backoffice at /backoffice (same process)."
+    },
+    {
+      "id": "api",
+      "label": "Nexova API",
+      "port": 4000,
+      "url": "http://127.0.0.1:4000",
+      "status": "planned",
+      "notes": "Reserved for a standalone API process if/when split from Next route handlers."
+    },
+    {
+      "id": "workers",
+      "label": "Background workers",
+      "port": 4001,
+      "url": "http://127.0.0.1:4001",
+      "status": "planned",
+      "notes": "Reserved for job/SLA/automation workers."
+    }
+  ]
+}
