@@ -56,6 +56,7 @@ components/
 
 lib/
   public/                    # schema, talent validation, public helpers
+  candidate-engine/          # in-memory matching / scoring (not public UI)
   backoffice/                # auth helpers, CRM adapters, SLA logic (later)
 ```
 
@@ -65,12 +66,14 @@ lib/
 3. Public talent form stays client-validated until a backend/API phase wires intake to CRM/ATS.
 4. Backoffice gets its own layout, navigation, and auth — never reuse the public marketing shell as the admin chrome.
 5. Shared primitives (buttons, inputs) can move to `components/ui/` later if both surfaces need them; don’t preemptively abstract.
+6. **Do not** import `lib/candidate-engine/*` from `(public)` routes in the fundamentals phase (engine is logic-only until a later UI/API phase).
 
 ## Phase map
 
 | Phase | What ships | Touches |
 |---|---|---|
 | **Now** | Public site v1 (landing + talent form) | `app/(public)`, `components/public`, `lib/public` |
+| **Now (parallel)** | Candidate matching engine v0 (typed utils + Vitest) | `lib/candidate-engine`, CONTEXT in historical-reference |
 | **Next** | Backoffice shell + auth | `app/(backoffice)/backoffice`, `components/backoffice`, auth provider |
 | **Later** | Lead inbox, search/SLA ops, commercial workflows | backoffice modules + APIs; commercial appendix in product context |
 
