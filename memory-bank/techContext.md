@@ -31,6 +31,7 @@ nexova/
     backoffice/                # internal UI (later)
   lib/
     public/                    # public helpers / validation / schema
+    candidate-engine/          # matching / scoring utils (no UI)
     backoffice/                # internal helpers (later)
 ```
 
@@ -45,6 +46,12 @@ nexova/
 |---|---|---|
 | `/backoffice` | Backoffice | Internal home (auth required) |
 | `/backoffice/…` | Backoffice | Leads, ops, commercial tools |
+
+### Candidate engine (logic only)
+- Path: `lib/candidate-engine/`
+- Contract: `historical-reference/programming-fundamentals-context.md`
+- Run checks: `npm run fundamentals` (Vitest; requires **Node 18+**)
+- Not imported by public routes in this phase
 
 ### Styling
 - **Tailwind CSS** via PostCSS.
@@ -77,6 +84,7 @@ nexova/
 npm install
 npm run dev      # starts web on 3456 + opens Firefox
 npm run ports    # labeled list of reserved/local services (UP/DOWN)
+npm run fundamentals  # candidate-engine Vitest suite (Node 18+)
 ```
 
 Port registry: `config/ports.json`  
@@ -97,3 +105,4 @@ Cursor’s Ports panel is often empty on local Mac workspaces; `npm run ports` i
 | System boundaries | `architecture.md` |
 | Continuity / open decisions | `historical-reference/00-index.md` |
 | Public product context | `historical-reference/product-context.md` |
+| Candidate engine contract | `historical-reference/programming-fundamentals-context.md` |
