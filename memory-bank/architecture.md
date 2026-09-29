@@ -7,7 +7,7 @@ Hot-path map for how the product is split. Product copy and form field truth sta
 | Surface | Audience | Status | Local address |
 |---|---|---|---|
 | **Public website** | Candidates + company visitors | Active (v1) | `http://127.0.0.1:3456/` |
-| **Backoffice UI** | Internal Nexova staff | Planned | `http://127.0.0.1:3456/backoffice` (same Next process) |
+| **Backoffice UI** | Internal Nexova staff | Active (Talent Pipeline Tracker) | `http://127.0.0.1:3456/backoffice` (same Next process) |
 | **API** | App + integrations | Planned | `http://127.0.0.1:4000` (only if split out later) |
 | **Workers** | Jobs / SLA automation | Planned | `http://127.0.0.1:4001` (reserved) |
 
@@ -29,8 +29,9 @@ Keep these surfaces **separated in code** even while they share one Next.js proc
 │     /              landing                              │
 │     /application   talent form (client validate only)   │
 │                                                         │
-│  (backoffice)      future — auth-gated internal tools   │
-│     /backoffice    dashboard, leads, SLA, commercial    │
+│  (backoffice)      demo-gated internal tools            │
+│     /backoffice/login     demo sign-in                  │
+│     /backoffice/pipeline  talent pipeline tracker       │
 │                                                         │
 │  shared later      APIs, DB, auth, integrations         │
 └─────────────────────────────────────────────────────────┘
@@ -45,19 +46,24 @@ app/
     layout.tsx               # marketing chrome (header/footer)
     page.tsx                 # /
     application/page.tsx     # /application
-  (backoffice)/              # reserved; add when building internal tools
+  (backoffice)/
     backoffice/
-      layout.tsx             # (future) backoffice chrome + auth gate
-      page.tsx               # (future) /backoffice
+      layout.tsx             # backoffice metadata (noindex)
+      page.tsx               # /backoffice → /backoffice/pipeline
+      login/page.tsx         # demo sign-in (no shell)
+      (app)/layout.tsx       # shell: header/tabs, providers, demo bootstrap
+      (app)/pipeline/        # list, new/, [id]/
 
 components/
   public/                    # marketing UI only
-  backoffice/                # internal UI only (empty until that phase)
+  backoffice/                # internal UI only (shell/, pipeline/)
 
 lib/
   public/                    # schema, talent validation, public helpers
-  candidate-engine/          # in-memory matching / scoring (not public UI)
-  backoffice/                # auth helpers, CRM adapters, SLA logic (later)
+  candidate-engine/          # in-memory matching / scoring (not wired to any UI)
+  backoffice/                # auth/, pipeline/ (API client, schemas, labels, hooks, mocks), notify
+
+middleware.ts                # guards /backoffice/* only
 ```
 
 ### Rules
@@ -67,6 +73,8 @@ lib/
 4. Backoffice gets its own layout, navigation, and auth — never reuse the public marketing shell as the admin chrome.
 5. Shared primitives (buttons, inputs) can move to `components/ui/` later if both surfaces need them; don’t preemptively abstract.
 6. **Do not** import `lib/candidate-engine/*` from `(public)` routes in the fundamentals phase (engine is logic-only until a later UI/API phase).
+7. **Do not** import `lib/candidate-engine/*` from backoffice code until a matching phase (see `talent-pipeline-context.md` → Engine integration roadmap).
+8. `middleware.ts` matches `/backoffice/:path*` only; public routes never run it.
 
 ## Phase map
 
@@ -74,7 +82,8 @@ lib/
 |---|---|---|
 | **Now** | Public site v1 (landing + talent form) | `app/(public)`, `components/public`, `lib/public` |
 | **Now (parallel)** | Candidate matching engine v0 (typed utils + Vitest) | `lib/candidate-engine`, CONTEXT in historical-reference |
-| **Next** | Backoffice shell + auth | `app/(backoffice)/backoffice`, `components/backoffice`, auth provider |
+| **Now (backoffice)** | Backoffice shell + demo auth + Talent Pipeline Tracker | `app/(backoffice)/backoffice`, `components/backoffice`, `lib/backoffice`, `middleware.ts`; CONTEXT `talent-pipeline-context.md` |
+| **Next** | Real auth, engine matching panel | auth provider, `lib/backoffice/pipeline/matching/` |
 | **Later** | Lead inbox, search/SLA ops, commercial workflows | backoffice modules + APIs; commercial appendix in product context |
 
 ## Why one repo for now

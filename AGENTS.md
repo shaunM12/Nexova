@@ -14,6 +14,7 @@
 | `memory-bank/techContext.md` | Stack, Tailwind/responsive, run commands, current routes |
 | `memory-bank/historical-reference/product-context.md` | Public site / talent form product truth |
 | `memory-bank/historical-reference/programming-fundamentals-context.md` | Candidate engine v0 (types, scoring, validations, evals) |
+| `memory-bank/historical-reference/talent-pipeline-context.md` | Backoffice shell + Talent Pipeline Tracker (routes, demo auth, API client, labels, demo mode, evals) |
 | `memory-bank/historical-reference/00-index.md` | Continuity / open decisions / conflicts only |
 | Other `historical-reference/` files | Only when the user asks or names them |
 
@@ -26,10 +27,12 @@
 4. `programming-fundamentals-context.md` owns candidate-engine types, scoring, engine validations, and fundamentals evals.
 5. Ship checklist never overrides landing/form copy, fields, or domain values.
 6. Do not merge public talent-form fields into engine `Candidate` unless a mapping phase says so.
+7. `talent-pipeline-context.md` owns backoffice shell, demo auth, pipeline API client, pipeline labels, and pipeline evals.
+8. Backoffice code does not import `lib/candidate-engine` until a matching phase says so.
 
 ## Surfaces
 - **Public website** (`app/(public)`, `components/public`, `lib/public`) — active.
-- **Backoffice** (`app/(backoffice)/backoffice`, `components/backoffice`, `lib/backoffice`) — planned; do not mix marketing chrome into admin UI.
+- **Backoffice** (`app/(backoffice)/backoffice`, `components/backoffice`, `lib/backoffice`) — active (Talent Pipeline Tracker); do not mix marketing chrome into admin UI.
 
 ## First public ship (defaults)
 - Fully responsive, mobile-first landing + talent form (Next.js + React).
@@ -37,4 +40,4 @@
 - Build from `product-context.md`; structure from `architecture.md` + `techContext.md`.
 
 ## Responsive mandate
-Every public UI deliverable must work across mobile, tablet, and desktop.
+Every public and backoffice UI deliverable must work across mobile, tablet, and desktop.

@@ -5,8 +5,8 @@ Company copy / form field truth: `historical-reference/product-context.md`.
 
 ## Product posture
 - **Public website (active):** marketing landing + talent registration.
-- **Backoffice (planned):** authenticated internal tools under `/backoffice`.
-- Public experience must be **fully responsive and mobile-first**.
+- **Backoffice (active):** demo-gated internal tools under `/backoffice`; first tool is the Talent Pipeline Tracker.
+- Public and backoffice experiences must be **fully responsive and mobile-first**.
 - First ship keeps the talent form client-side only (no CRM wiring yet).
 
 ## Target architecture
@@ -25,14 +25,16 @@ nexova/
       layout.tsx               # marketing header/footer
       page.tsx                 # /
       application/page.tsx     # /application
-    (backoffice)/              # reserved for /backoffice later
+    (backoffice)/backoffice/   # login + (app) shell + pipeline
   components/
     public/                    # marketing UI
-    backoffice/                # internal UI (later)
+    backoffice/                # shell/ + pipeline/
   lib/
     public/                    # public helpers / validation / schema
     candidate-engine/          # matching / scoring utils (no UI)
-    backoffice/                # internal helpers (later)
+    backoffice/                # auth/, pipeline/, notify.ts
+  middleware.ts                # /backoffice/* guard only
+  public/mockServiceWorker.js  # MSW worker for demo mode (committed)
 ```
 
 ### Routes (current)
@@ -40,18 +42,28 @@ nexova/
 |---|---|---|
 | `/` | Public | Landing + Organization schema |
 | `/application` | Public | Talent form |
+| `/backoffice` | Backoffice | Redirects to `/backoffice/pipeline` |
+| `/backoffice/login` | Backoffice | Demo sign-in |
+| `/backoffice/pipeline` | Backoffice | Candidate list (filters/search/page in URL) |
+| `/backoffice/pipeline/new` | Backoffice | Register candidate |
+| `/backoffice/pipeline/[id]` | Backoffice | Candidate detail (status, stage, edit, notes) |
 
 ### Routes (planned)
 | Route | Surface | Role |
 |---|---|---|
-| `/backoffice` | Backoffice | Internal home (auth required) |
-| `/backoffice/…` | Backoffice | Leads, ops, commercial tools |
+| `/backoffice/…` | Backoffice | Further tools as new tabs (incidents, inventory, knowledge base) |
+
+### Talent Pipeline Tracker
+- Contract: `historical-reference/talent-pipeline-context.md`
+- Stack: TanStack Query 5, Zod 4, React Hook Form 7, Sonner, MSW 2 (demo + tests)
+- Data mode: live 4Geeks API by default; `NEXT_PUBLIC_PIPELINE_API_URL=demo` (`.env.local`) for in-browser demo data; tests are forced to demo in `vitest.config.ts`
+- Tests: `npm run test:pipeline` (Vitest jsdom + React Testing Library + MSW)
 
 ### Candidate engine (logic only)
 - Path: `lib/candidate-engine/`
 - Contract: `historical-reference/programming-fundamentals-context.md`
-- Run checks: `npm run fundamentals` (Vitest; requires **Node 18+**)
-- Not imported by public routes in this phase
+- Run checks: `npm run fundamentals` (Vitest `engine` project)
+- Not imported by public or backoffice code in this phase
 
 ### Styling
 - **Tailwind CSS** via PostCSS.
@@ -80,22 +92,30 @@ nexova/
 - Form option **values** stay English; labels/errors follow locale
 
 ## Local run
+Node **20.19+** (`.nvmrc` = 24; run `nvm use`).
+
 ```bash
 npm install
-npm run dev      # starts web on 3456 + opens Firefox
-npm run ports    # labeled list of reserved/local services (UP/DOWN)
-npm run fundamentals  # candidate-engine Vitest suite (Node 18+)
+npm run dev            # starts web on 3456 + opens Firefox at /
+npm run dev:backoffice # same server; Firefox opens at /backoffice
+npm run ports          # labeled list of reserved/local services (UP/DOWN)
+npm test               # engine + pipeline Vitest projects
+npm run fundamentals   # engine project only
+npm run test:pipeline  # pipeline project only
+npm run typecheck      # tsc --noEmit
 ```
 
+Done checks for backoffice work: `lint`, `typecheck`, `fundamentals`, `test:pipeline`, `build`.
+
 Port registry: `config/ports.json`  
-- **3456** — Next web (public + future `/backoffice`)  
+- **3456** — Next web (public + `/backoffice`)  
 - **4000** — reserved API  
 - **4001** — reserved workers  
 
 Cursor’s Ports panel is often empty on local Mac workspaces; `npm run ports` is the multi-service picker.
 
 ## Later phases
-1. Backoffice shell + auth (`architecture.md`)
+1. Real backoffice auth; engine matching panel (`talent-pipeline-context.md` roadmap)
 2. Talent form → CRM / ATS intake API
 3. SLA / commercial workflows (product-context commercial appendix)
 
@@ -106,3 +126,4 @@ Cursor’s Ports panel is often empty on local Mac workspaces; `npm run ports` i
 | Continuity / open decisions | `historical-reference/00-index.md` |
 | Public product context | `historical-reference/product-context.md` |
 | Candidate engine contract | `historical-reference/programming-fundamentals-context.md` |
+| Talent Pipeline Tracker contract | `historical-reference/talent-pipeline-context.md` |
