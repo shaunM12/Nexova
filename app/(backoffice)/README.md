@@ -1,11 +1,11 @@
-# Backoffice route group (planned)
+# Backoffice route group
 
-Reserved for authenticated internal tools under `/backoffice`.
+Internal tools under `/backoffice`, gated by a demo session (`middleware.ts`).
 
-Do not add marketing pages here. When this phase starts:
+- `backoffice/login` — demo sign-in (no shell)
+- `backoffice/(app)/` — shared shell (header, tabs, providers, demo bootstrap)
+- `backoffice/(app)/pipeline` — Talent Pipeline Tracker
 
-1. Create `backoffice/layout.tsx` (auth gate + internal nav)
-2. Create `backoffice/page.tsx` → `/backoffice`
-3. Use `components/backoffice` and `lib/backoffice` only
+Do not add marketing pages here. Use `components/backoffice` and `lib/backoffice` only.
 
-See `memory-bank/architecture.md`.
+Contract: `memory-bank/historical-reference/talent-pipeline-context.md`.

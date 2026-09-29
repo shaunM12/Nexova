@@ -2,7 +2,7 @@
 id: nexova.hr.00
 title: Continuity index
 status: active
-last_reviewed: 2026-09-21
+last_reviewed: 2026-09-29
 ---
 
 # Nexova — historical reference index
@@ -14,6 +14,7 @@ last_reviewed: 2026-09-21
 |---|---|
 | Company + first public site + form + ship checklist + commercial appendix | **`product-context.md`** |
 | Candidate / vacancy matching engine (Programming Fundamentals) | **`programming-fundamentals-context.md`** |
+| Backoffice shell + Talent Pipeline Tracker | **`talent-pipeline-context.md`** |
 
 ## Glossary
 | Term | Meaning |
@@ -29,6 +30,10 @@ last_reviewed: 2026-09-21
 | SelectionProcess | Engine entity: candidate progress through a vacancy pipeline |
 | Match score | Explainable 0–100 fit score (`total` + `breakdown`) between candidate and vacancy |
 | Candidate engine v0 | In-memory typed TS utils under `lib/candidate-engine/` for scoring / shortlist logic |
+| Pipeline record | A candidate application in the shared 4Geeks tracker API (`talent-pipeline-context.md`); separate from engine `Candidate` |
+| Status / Stage | Independent pipeline fields; UI shows labels only (e.g. `in_progress` → "In progress") |
+| Stale | Received / In progress record not updated for 14+ days |
+| Demo mode | Backoffice running on in-browser MSW data when no API URL is configured |
 
 ## Canonical facts (summary)
 - Founded 2011 · HQ Valencia, ES · Miami, FL, US
@@ -43,6 +48,7 @@ last_reviewed: 2026-09-21
 |---|---|
 | Product context + first-ship build guide | `product-context.md` |
 | Candidate engine v0 + scoring + engine validations | `programming-fundamentals-context.md` |
+| Backoffice shell, demo auth, pipeline API client, labels, pipeline evals | `talent-pipeline-context.md` |
 | Stack / responsive / run architecture | `../techContext.md` (hot path) |
 | Continuity / open decisions | this file |
 
@@ -51,14 +57,17 @@ last_reviewed: 2026-09-21
 - [x] Second language in v1: **Spanish** via header EN/ES toggle (`product-context.md` Language)
 - [x] Programming Fundamentals / candidate engine v0 lives under `lib/candidate-engine/`; contracts in `programming-fundamentals-context.md`
 - [x] Public talent-form fields and engine `Candidate` model are intentionally separate until a mapping phase
+- [x] Backoffice lives on the same app/port at `/backoffice`; first tool is the Talent Pipeline Tracker (`talent-pipeline-context.md`)
+- [x] Pipeline records (4Geeks API) and engine `Candidate` stay separate; backoffice does not import the engine until a matching phase
+- [x] Pipeline list follows API order (no client-side sort); see `talent-pipeline-context.md`
 
 ## Open decisions (do not invent)
 - [ ] Exact experience wording (“since 2011” vs “12 years” vs “over 10 years”)
 - [ ] Whether “Latin American market” stays in Why Nexova copy
 - [ ] Footer copyright year policy (copy currently shows © 2025)
 - [ ] Confirm real LinkedIn/Instagram URLs vs schema placeholders
-
 ## Conflict rule
 `00-index` → owning context file for the surface → changelog in that file.  
 - Public site: ship checklist never overrides landing/form field names, copy, or domain values in `product-context.md`.  
 - Engine: scoring, types, and evals never override this index’s continuity rules; details live in `programming-fundamentals-context.md`.
+- Pipeline: the course brief is a guideline; `talent-pipeline-context.md` wins for implementation, but Elena’s acceptance criteria are never relaxed.

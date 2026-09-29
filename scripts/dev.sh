@@ -2,7 +2,9 @@
 set -euo pipefail
 
 PORT=3456
-URL="http://127.0.0.1:${PORT}"
+BASE_URL="http://127.0.0.1:${PORT}"
+# Optional path to open in Firefox, e.g. `bash scripts/dev.sh /backoffice`
+OPEN_PATH="${1:-/}"
 
 # Free the port if a previous Next process is still holding it
 EXISTING="$(lsof -t -iTCP:"${PORT}" -sTCP:LISTEN 2>/dev/null || true)"
@@ -19,8 +21,8 @@ echo "Nexova listening on port ${PORT}"
 # Open Firefox once the server responds (system Firefox, not Cursor browser)
 (
   for _ in $(seq 1 80); do
-    if curl -sf -o /dev/null "$URL"; then
-      open -a Firefox "$URL"
+    if curl -sf -o /dev/null "$BASE_URL"; then
+      open -a Firefox "${BASE_URL}${OPEN_PATH}"
       exit 0
     fi
     sleep 0.25
